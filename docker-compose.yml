@@ -1,0 +1,41 @@
+services:
+  postgres:
+    container_name: service-p-postgres
+    image: postgres:16-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d service_p"]
+      interval: 2s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    env_file:
+      - envs/postgres.env
+    networks:
+      - service_p_net
+
+  api:
+    container_name: service-p-api
+    build: app/
+    command: ["sh", "entrypoints/api.sh"]
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - envs/app.env
+    environment:
+      GUNICORN_WORKERS: 2
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - service_p_net
+
+networks:
+  service_p_net:
+
+volumes:
+  pg_data:

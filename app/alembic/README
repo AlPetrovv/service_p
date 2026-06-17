@@ -1,0 +1,7 @@
+Async (asyncpg) Alembic environment.
+
+The database URL is taken from application settings (APP__DB__URL), not from
+alembic.ini. Migrations are applied automatically on container start
+(see entrypoints/api.sh) or manually with:
+
+    cd app && poetry run alembic upgrade head

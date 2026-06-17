@@ -1,0 +1,88 @@
+[tool.poetry]
+name = "service_p"
+version = "0.1.0"
+description = "Async REST API for users, accounts and payment webhooks"
+authors = [""]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.15"
+
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.43"}
+pydantic = {extras = ["email"], version = "^2.11.7"}
+pydantic-settings = "^2.12.0"
+alembic = "^1.16.5"
+asyncpg = "^0.31.0"
+fastapi = "^0.115.0"
+uvicorn = {extras = ["standard"], version = "^0.32.0"}
+orjson = "^3.10.0"
+gunicorn = "^23.0.0"
+dependency-injector = "^4.48.3"
+loguru = "^0.7.0"
+pyjwt = "^2.9.0"
+bcrypt = "^4.2.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.15.15"
+black = "^26.5.1"
+pytest = "^8.3.0"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 119
+target-version = ["py312"]
+skip-string-normalization = true
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | \dist
+  | \.ruff_cache
+  | \.ruff
+)/
+'''
+
+
+[tool.ruff]
+line-length = 119
+
+[tool.ruff.lint]
+select = [
+    "A",  # prevent using keywords that clobber python builtins
+    "B",  # bugbear: security warnings
+    "D", # pydocstyle
+    "E",  # pycodestyle
+    "F",  # pyflakes
+    "ISC",  # implicit string concatenation
+    "RUF",  # the ruff developer's own rules
+]
+ignore = [
+    "D100", # Missing docstring in public module
+    "D101", # Missing docstring in public class
+    "D102", #  Missing docstring in public method
+    "D103", #  Missing docstring in public function
+    "D104", #  Missing docstring in public package
+    "D105", # Missing docstring in magic method
+    "D106", # Missing docstring in public nested class
+    "D107", # Missing docstring in __init__
+    "D205", # 1 blank line required between summary line and description
+    "B008", # Do not perform function call in argument defaults (FastAPI Depends)
+    "RUF001",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.ruff.lint.isort]
+known-first-party = ["application", "domain", "infra", "presentation"]
